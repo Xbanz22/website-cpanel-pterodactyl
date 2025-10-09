@@ -18,14 +18,15 @@ export default async function handler(request, response) {
 
         const hashedPassword = await bcrypt.hash(password, 10);
         
-        // Buat objek user baru
+        // Buat objek user baru DENGAN ROLE
         const newUser = { 
             username, 
             email, 
-            password: hashedPassword 
+            password: hashedPassword,
+            role: 'free' // <-- TAMBAHAN PENTING!
         };
         
-        // Simpan objek langsung ke KV, tanpa JSON.stringify
+        // Simpan objek langsung ke KV
         await kv.set(`user:${username}`, newUser);
         
         return response.status(201).json({ message: 'Registrasi berhasil!' });
