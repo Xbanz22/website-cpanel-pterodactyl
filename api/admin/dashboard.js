@@ -2,28 +2,25 @@ import { kv } from '@vercel/kv';
 
 export default async function handler(request, response) {
     try {
-        // kv.scan('user:*') mengambil semua kunci yang cocok dengan pola 'user:'
         const userKeys = [];
         for await (const key of kv.scanIterator({ match: 'user:*' })) {
             userKeys.push(key);
         }
-
         if (userKeys.length === 0) {
-            return response.status(200).json({ totalUsers: 0, users: [] });
+            return response.status(200).json({ totalUsers: 0, users: [], roleCounts: {} });
         }
-
-        // kv.mget() mengambil semua data dari kunci yang diberikan dalam satu panggilan
         const users = await kv.mget(...userKeys);
 
-        // Menghapus data sensitif seperti password hash sebelum dikirim
-        const sanitizedUsers = users.map(user => ({
-            username: user.username,
-            email: user.email,
-        }));
+        const roleCounts = { free: 0, member: 0, admin: 0 };
+        const sanitizedUsers = users.map(user => {
+            if(user.role) roleCounts[user.role]++;
+            return { username: user.username, email: user.email, role: user.role || 'free' };
+        });
 
         return response.status(200).json({
             totalUsers: sanitizedUsers.length,
-            users: sanitizedUsers
+            users: sanitizedUsers,
+            roleCounts: roleCounts
         });
     } catch (error) {
         console.error("Dashboard data error:", error);
