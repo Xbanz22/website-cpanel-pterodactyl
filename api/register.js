@@ -10,16 +10,28 @@ export default async function handler(request, response) {
         if (!username || !email || !password) {
             return response.status(400).json({ message: 'Username, email, dan password diperlukan.' });
         }
+
         const existingUser = await kv.get(`user:${username}`);
         if (existingUser) {
             return response.status(409).json({ message: 'Username sudah digunakan.' });
         }
+
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = { username, email, password: hashedPassword };
-        await kv.set(`user:${username}`, JSON.stringify(newUser));
+        
+        // Buat objek user baru
+        const newUser = { 
+            username, 
+            email, 
+            password: hashedPassword 
+        };
+        
+        // Simpan objek langsung ke KV, tanpa JSON.stringify
+        await kv.set(`user:${username}`, newUser);
+        
         return response.status(201).json({ message: 'Registrasi berhasil!' });
+
     } catch (error) {
-        console.error(error);
+        console.error("Register Error:", error);
         return response.status(500).json({ message: 'Terjadi kesalahan pada server.' });
     }
 }
