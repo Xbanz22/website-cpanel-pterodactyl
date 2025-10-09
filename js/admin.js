@@ -59,61 +59,8 @@ function initDashboard() {
 
     handleCreateAdminForm();
     fetchDashboardData();
-    fetchAllServersData(); // Ini akan menjalankan fungsi yang sudah di-upgrade
+    fetchAllServersData();
 }
-
-/**
- * Mengambil data SEMUA server dari Pterodactyl dan menampilkannya.
- * VERSI LENGKAP DENGAN LOGIKA STATUS.
- */
-async function fetchAllServersData() {
-    const tableBody = document.getElementById('serverTableBody');
-    try {
-        const response = await fetch('/api/admin/get-all-servers');
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message);
-        
-        const totalServersEl = document.getElementById('totalServers');
-        if (totalServersEl) totalServersEl.textContent = data.totalServers;
-
-        tableBody.innerHTML = ''; // Kosongkan tabel sebelum diisi
-        if (data.servers.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="6">No servers found on Pterodactyl.</td></tr>';
-            return;
-        }
-
-        data.servers.forEach(server => {
-            // === LOGIKA BARU UNTUK MENENTUKAN STATUS ===
-            const isSuspended = server.suspended;
-            const statusClass = isSuspended ? 'status-suspended' : 'status-active';
-            const statusText = isSuspended ? 'Suspended' : 'Active';
-            // ===========================================
-
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>
-                    <div class="status">
-                        <span class="status-dot ${statusClass}"></span>
-                        ${statusText}
-                    </div>
-                </td>
-                <td>${server.name}</td>
-                <td>${server.user_id}</td>
-                <td>${server.ram} MB</td>
-                <td>${server.disk} MB</td>
-                <td>${server.cpu}%</td>
-            `;
-            tableBody.appendChild(row);
-        });
-
-    } catch (error) {
-        console.error('Failed to fetch all servers data:', error);
-        if (tableBody) tableBody.innerHTML = `<tr><td colspan="6" style="color:red;">Error: ${error.message}</td></tr>`;
-    }
-}
-
-
-// --- FUNGSI-FUNGSI LAINNYA (TIDAK PERLU DIUBAH, TAPI DISERTAKAN AGAR LENGKAP) ---
 
 /**
  * Menangani form untuk membuat admin baru.
@@ -158,6 +105,7 @@ function handleCreateAdminForm() {
  */
 async function fetchDashboardData() {
     const tableBody = document.getElementById('userTableBody');
+    tableBody.innerHTML = '<tr><td colspan="4">Loading data...</td></tr>';
     try {
         const response = await fetch('/api/admin/dashboard');
         const data = await response.json();
@@ -170,6 +118,10 @@ async function fetchDashboardData() {
         if (totalAdminsEl) totalAdminsEl.textContent = data.roleCounts.admin || 0;
         
         tableBody.innerHTML = '';
+        if(data.users.length === 0){
+             tableBody.innerHTML = '<tr><td colspan="4">No users found.</td></tr>';
+             return;
+        }
         data.users.forEach(user => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -192,7 +144,46 @@ async function fetchDashboardData() {
         addEventListenersToButtons();
     } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
-        if (tableBody) tableBody.innerHTML = `<tr><td colspan="4" style="color:red;">Error: ${error.message}</td></tr>`;
+        if (tableBody) tableBody.innerHTML = `<tr><td colspan="4" style="color:var(--danger-color);">${error.message}</td></tr>`;
+    }
+}
+
+/**
+ * Mengambil data SEMUA server dari Pterodactyl dan menampilkannya.
+ */
+async function fetchAllServersData() {
+    const tableBody = document.getElementById('serverTableBody');
+    tableBody.innerHTML = '<tr><td colspan="6">Loading server list...</td></tr>';
+    try {
+        const response = await fetch('/api/admin/get-all-servers');
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Failed to fetch servers.");
+        
+        const totalServersEl = document.getElementById('totalServers');
+        if (totalServersEl) totalServersEl.textContent = data.totalServers;
+
+        tableBody.innerHTML = '';
+        if (data.servers.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6">No servers found on Pterodactyl.</td></tr>';
+            return;
+        }
+        data.servers.forEach(server => {
+            const statusClass = server.suspended ? 'status-suspended' : 'status-active';
+            const statusText = server.suspended ? 'Suspended' : 'Active';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><div class="status"><span class="status-dot ${statusClass}"></span>${statusText}</div></td>
+                <td>${server.name}</td>
+                <td>${server.user_id}</td>
+                <td>${server.ram} MB</td>
+                <td>${server.disk} MB</td>
+                <td>${server.cpu}%</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Failed to fetch all servers data:', error);
+        tableBody.innerHTML = `<tr><td colspan="6" style="color:var(--danger-color);">Error: ${error.message} Periksa API Key Pterodactyl Anda di Vercel.</td></tr>`;
     }
 }
 
@@ -218,7 +209,7 @@ function addEventListenersToButtons() {
     document.querySelectorAll('.btn-delete').forEach(button => {
         button.addEventListener('click', async (e) => {
             const username = e.target.dataset.username;
-            if (confirm(`Are you sure you want to delete user "${username}"? This cannot be undone.`)) {
+            if (confirm(`Are you sure you want to delete user "${username}"?`)) {
                 try {
                     const response = await fetch('/api/admin/delete-user', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username }) });
                     const result = await response.json();
