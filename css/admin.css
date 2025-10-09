@@ -154,3 +154,50 @@ th {
 .btn-delete:hover {
     background-color: #dc2626;
 }
+
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.role-free { background-color: #e0e7ff; color: #4338ca; }
+.role-member { background-color: #dcfce7; color: #166534; }
+.role-admin { background-color: #fee2e2; color: #991b1b; }
+
+/* Inline Form for Create Admin */
+.inline-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.inline-form input {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    flex-grow: 1;
+}
+.inline-form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.btn-create {
+    background-color: var(--primary-color);
+    color: white;
+}
+.btn-create:hover {
+    background-color: #5445d4;
+}
+.btn-save-role {
+    background-color: #16a34a;
+    color: white;
+    margin-left: 10px;
+}
+.btn-save-role:hover {
+    background-color: #15803d;
+}
