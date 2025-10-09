@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>Admin Panel</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-link active">
+                    <svg><!-- icon dashboard --></svg> Dashboard
+                </a>
+                <a href="#" class="nav-link">
+                    <svg><!-- icon users --></svg> Users
+                </a>
+                <a href="#" id="logoutButton" class="nav-link logout">
+                    <svg><!-- icon logout --></svg> Logout
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Dashboard Overview</h1>
+            </header>
+            
+            <!-- Statistik Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Total Users</h4>
+                    <p id="totalUsers">...</p>
+                </div>
+                <div class="stat-card">
+                    <h4>Servers Created</h4>
+                    <p id="totalServers">...</p>
+                </div>
+                <div class="stat-card">
+                    <h4>API Status</h4>
+                    <p class="status-ok">Online</p>
+                </div>
+            </div>
+
+            <!-- Tabel Pengguna -->
+            <div class="content-block">
+                <h2>Registered Users</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <!-- Data akan diisi oleh JavaScript -->
+                            <tr><td colspan="3">Loading data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/admin.js"></script>
+</body>
+</html>
