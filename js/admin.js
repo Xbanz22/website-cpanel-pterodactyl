@@ -1,3 +1,6 @@
+// Variabel global untuk melacak halaman server saat ini
+let currentServerPage = 1;
+
 // Menentukan fungsi mana yang dijalankan berdasarkan halaman yang dimuat
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('adminLoginForm')) {
@@ -59,7 +62,7 @@ function initDashboard() {
 
     handleCreateAdminForm();
     fetchDashboardData();
-    fetchAllServersData();
+    fetchAllServersData(currentServerPage); // Memuat halaman pertama server saat dashboard dibuka
 }
 
 /**
@@ -149,30 +152,32 @@ async function fetchDashboardData() {
 }
 
 /**
- * Mengambil data SEMUA server dari Pterodactyl dan menampilkannya.
+ * Mengambil data SEMUA server dari Pterodactyl dengan paging dan menampilkannya.
  */
-async function fetchAllServersData() {
+async function fetchAllServersData(page = 1) {
     const tableBody = document.getElementById('serverTableBody');
-    tableBody.innerHTML = '<tr><td colspan="6">Loading server list...</td></tr>';
+    tableBody.innerHTML = `<tr><td colspan="6">Loading server list on page ${page}...</td></tr>`;
     try {
-        const response = await fetch('/api/admin/get-all-servers');
+        const response = await fetch(`/api/admin/get-all-servers?page=${page}`);
         const data = await response.json();
-        if (!response.ok) throw new Error(data.message || "Failed to fetch servers.");
+        if (!response.ok) throw new Error(data.message);
         
-        const totalServersEl = document.getElementById('totalServers');
-        if (totalServersEl) totalServersEl.textContent = data.totalServers;
+        currentServerPage = data.pagination.current_page;
+        updateServerPagination(data.pagination);
 
+        const totalServersEl = document.getElementById('totalServers');
+        if (totalServersEl) totalServersEl.textContent = data.pagination.total;
+        
         tableBody.innerHTML = '';
         if (data.servers.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="6">No servers found on Pterodactyl.</td></tr>';
+            tableBody.innerHTML = `<tr><td colspan="6">No servers found on page ${page}.</td></tr>`;
             return;
         }
         data.servers.forEach(server => {
-            const statusClass = server.suspended ? 'status-suspended' : 'status-active';
-            const statusText = server.suspended ? 'Suspended' : 'Active';
+            const statusClass = `status-${server.status.class}`;
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td><div class="status"><span class="status-dot ${statusClass}"></span>${statusText}</div></td>
+                <td><div class="status"><span class="status-dot ${statusClass}"></span>${server.status.text}</div></td>
                 <td>${server.name}</td>
                 <td>${server.user_id}</td>
                 <td>${server.ram} MB</td>
@@ -183,7 +188,31 @@ async function fetchAllServersData() {
         });
     } catch (error) {
         console.error('Failed to fetch all servers data:', error);
-        tableBody.innerHTML = `<tr><td colspan="6" style="color:var(--danger-color);">Error: ${error.message} Periksa API Key Pterodactyl Anda di Vercel.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6" style="color:var(--danger-color);">Error: ${error.message} Periksa API Key Anda.</td></tr>`;
+    }
+}
+
+/**
+ * Memperbarui tampilan tombol paging untuk daftar server.
+ */
+function updateServerPagination(pagination) {
+    const paginationEl = document.getElementById('serverPagination');
+    if (!paginationEl) return;
+    
+    paginationEl.innerHTML = `
+        <button id="prevPageBtn" ${pagination.current_page === 1 ? 'disabled' : ''}>&laquo; Prev</button>
+        <span>Page ${pagination.current_page} of ${pagination.total_pages}</span>
+        <button id="nextPageBtn" ${pagination.current_page >= pagination.total_pages ? 'disabled' : ''}>Next &raquo;</button>
+    `;
+    
+    const prevBtn = document.getElementById('prevPageBtn');
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => fetchAllServersData(currentServerPage - 1));
+    }
+
+    const nextBtn = document.getElementById('nextPageBtn');
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => fetchAllServersData(currentServerPage + 1));
     }
 }
 
