@@ -9,7 +9,7 @@
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="sidebar-header"><h3>Admin Panel</h3></div>
+            <div class="sidebar-header">PanelAdmin</div>
             <nav class="sidebar-nav">
                 <a href="#" class="nav-link active">Dashboard</a>
                 <a href="#" id="logoutButton" class="nav-link logout">Logout</a>
@@ -17,21 +17,12 @@
         </aside>
 
         <main class="main-content">
-            <header class="main-header"><h1>Dashboard Overview</h1></header>
+            <header class="main-header"><h1>Dashboard</h1></header>
             
             <div class="stats-grid">
-                <div class="stat-card"><h4>Total Users (Website)</h4><p id="totalUsers">...</p></div>
-                <div class="stat-card"><h4>Total Servers (Pterodactyl)</h4><p id="totalServers">...</p></div>
-                <div class="stat-card"><h4>Admins</h4><p id="totalAdmins">...</p></div>
-            </div>
-
-            <div class="content-block">
-                <h2>Keterangan Role</h2>
-                <ul class="role-description">
-                    <li><span class="role-badge role-free">Free</span> : Hanya bisa membuat panel 1GB.</li>
-                    <li><span class="role-badge role-member">Member</span> : Bisa membuat semua jenis panel (1GB - Unlimited).</li>
-                    <li><span class="role-badge role-admin">Admin</span> : Bisa mengelola user dan membuat admin baru.</li>
-                </ul>
+                <div class="stat-card" style="animation-delay: 100ms;"><h4>Total Users (Website)</h4><p id="totalUsers">...</p></div>
+                <div class="stat-card" style="animation-delay: 200ms;"><h4>Total Servers (Pterodactyl)</h4><p id="totalServers">...</p></div>
+                <div class="stat-card" style="animation-delay: 300ms;"><h4>Admins</h4><p id="totalAdmins">...</p></div>
             </div>
 
             <div class="content-block">
@@ -46,6 +37,11 @@
 
             <div class="content-block">
                 <h2>Manage Website Users</h2>
+                <p class="role-description">
+                    <span class="role-badge role-free">Free</span>: Hanya create 1GB. 
+                    <span class="role-badge role-member">Member</span>: Create semua plan.
+                    <span class="role-badge role-admin">Admin</span>: Kelola semua.
+                </p>
                 <div class="table-container">
                     <table>
                         <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead>
@@ -58,8 +54,8 @@
                 <h2>All Servers on Pterodactyl Panel</h2>
                 <div class="table-container">
                     <table>
-                        <thead><tr><th>Server Name</th><th>Owner (User ID)</th><th>RAM</th><th>Disk</th><th>CPU</th></tr></thead>
-                        <tbody id="serverTableBody"><tr><td colspan="5">Loading server list...</td></tr></tbody>
+                        <thead><tr><th>Status</th><th>Server Name</th><th>Owner (User ID)</th><th>RAM</th><th>Disk</th><th>CPU</th></tr></thead>
+                        <tbody id="serverTableBody"><tr><td colspan="6">Loading server list...</td></tr></tbody>
                     </table>
                 </div>
             </div>
