@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Panel Baru</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="panel-box">
+            <h2>Buat Panel Pterodactyl Anda</h2>
+            <p>Isi detail di bawah ini untuk membuat server baru.</p>
+            <form id="createPanelForm">
+                <div class="input-group">
+                    <label for="panelUsername">Username Panel</label>
+                    <input type="text" id="panelUsername" name="panelUsername" required placeholder="Contoh: alifganz">
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="Email untuk login ke panel">
+                </div>
+                <div class="input-group">
+                    <label for="plan">Pilih Paket</label>
+                    <select id="plan" name="plan">
+                        <option value="1gb">1 GB RAM</option>
+                        <option value="2gb">2 GB RAM</option>
+                        <option value="3gb">3 GB RAM</option>
+                        <option value="4gb">4 GB RAM</option>
+                        <option value="5gb">5 GB RAM</option>
+                        <option value="unli">Unlimited</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Buat Panel Sekarang</button>
+            </form>
+        </div>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>
