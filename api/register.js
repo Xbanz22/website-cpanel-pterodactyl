@@ -23,7 +23,7 @@ export default async function handler(request, response) {
             username, 
             email, 
             password: hashedPassword,
-            role: 'free' // <-- TAMBAHAN PENTING!
+            role: 'free'
         };
         
         // Simpan objek langsung ke KV
