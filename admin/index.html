@@ -20,21 +20,20 @@
             <header class="main-header"><h1>Dashboard Overview</h1></header>
             
             <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>Total Users</h4>
-                    <p id="totalUsers">...</p>
-                </div>
-                <div class="stat-card">
-                    <h4>Admins</h4>
-                    <p id="totalAdmins">...</p>
-                </div>
-                <div class="stat-card">
-                    <h4>Members</h4>
-                    <p id="totalMembers">...</p>
-                </div>
+                <div class="stat-card"><h4>Total Users (Website)</h4><p id="totalUsers">...</p></div>
+                <div class="stat-card"><h4>Total Servers (Pterodactyl)</h4><p id="totalServers">...</p></div>
+                <div class="stat-card"><h4>Admins</h4><p id="totalAdmins">...</p></div>
             </div>
 
-            <!-- Bagian Buat Admin Baru -->
+            <div class="content-block">
+                <h2>Keterangan Role</h2>
+                <ul class="role-description">
+                    <li><span class="role-badge role-free">Free</span> : Hanya bisa membuat panel 1GB.</li>
+                    <li><span class="role-badge role-member">Member</span> : Bisa membuat semua jenis panel (1GB - Unlimited).</li>
+                    <li><span class="role-badge role-admin">Admin</span> : Bisa mengelola user dan membuat admin baru.</li>
+                </ul>
+            </div>
+
             <div class="content-block">
                 <h2>Create New Admin</h2>
                 <form id="createAdminForm" class="inline-form">
@@ -45,22 +44,22 @@
                 </form>
             </div>
 
-            <!-- Tabel Pengguna -->
             <div class="content-block">
-                <h2>Manage Users</h2>
+                <h2>Manage Website Users</h2>
                 <div class="table-container">
                     <table>
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="userTableBody">
-                            <tr><td colspan="4">Loading data...</td></tr>
-                        </tbody>
+                        <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead>
+                        <tbody id="userTableBody"><tr><td colspan="4">Loading data...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="content-block">
+                <h2>All Servers on Pterodactyl Panel</h2>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Server Name</th><th>Owner (User ID)</th><th>RAM</th><th>Disk</th><th>CPU</th></tr></thead>
+                        <tbody id="serverTableBody"><tr><td colspan="5">Loading server list...</td></tr></tbody>
                     </table>
                 </div>
             </div>
