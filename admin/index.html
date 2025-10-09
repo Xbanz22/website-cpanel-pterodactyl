@@ -11,8 +11,14 @@
         <aside class="sidebar">
             <div class="sidebar-header">PanelAdmin</div>
             <nav class="sidebar-nav">
-                <a href="#" class="nav-link active">Dashboard</a>
-                <a href="#" id="logoutButton" class="nav-link logout">Logout</a>
+                <a href="#" class="nav-link active">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4.5 13.5a1.5 1.5 0 0 1-1.5-1.5V4.5a1.5 1.5 0 0 1 1.5-1.5h4.5a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3v1.5a1.5 1.5 0 0 1-1.5 1.5Zm9-9a1.5 1.5 0 0 1 1.5-1.5h4.5a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5h-4.5a1.5 1.5 0 0 1-1.5-1.5V4.5Zm-9 9a1.5 1.5 0 0 1 1.5-1.5h7.5a1.5 1.5 0 0 1 1.5 1.5v4.5a1.5 1.5 0 0 1-1.5 1.5h-7.5a1.5 1.5 0 0 1-1.5-1.5v-4.5Z"/></svg>
+                    Dashboard
+                </a>
+                <a href="#" id="logoutButton" class="nav-link logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.25a.75.75 0 0 1 .75.75v9a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0Zm12.122 2.62a.75.75 0 0 0-1.06-1.061l-2.22 2.22a.75.75 0 0 0 1.06 1.06l2.22-2.22ZM3.94 13.56a.75.75 0 0 0-1.06-1.06l-2.22 2.22a.75.75 0 0 0 1.06 1.06l2.22-2.22ZM12 7.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z"/></svg>
+                    Logout
+                </a>
             </nav>
         </aside>
 
@@ -28,24 +34,24 @@
             <div class="content-block">
                 <h2>Create New Admin</h2>
                 <form id="createAdminForm" class="inline-form">
-                    <input type="text" name="username" placeholder="Username" required>
-                    <input type="email" name="email" placeholder="Email" required>
-                    <input type="password" name="password" placeholder="Password" required>
+                    <div><label for="adminUser">Username</label><input type="text" name="username" id="adminUser" required></div>
+                    <div><label for="adminEmail">Email</label><input type="email" name="email" id="adminEmail" required></div>
+                    <div><label for="adminPass">Password</label><input type="password" name="password" id="adminPass" required></div>
                     <button type="submit" class="btn-create">Create Admin</button>
                 </form>
             </div>
 
             <div class="content-block">
                 <h2>Manage Website Users</h2>
-                <p class="role-description">
-                    <span class="role-badge role-free">Free</span>: Hanya create 1GB. 
-                    <span class="role-badge role-member">Member</span>: Create semua plan.
-                    <span class="role-badge role-admin">Admin</span>: Kelola semua.
-                </p>
+                <ul class="role-description">
+                    <li><span class="role-badge role-free"></span>Free</li>
+                    <li><span class="role-badge role-member"></span>Member</li>
+                    <li><span class="role-badge role-admin"></span>Admin</li>
+                </ul>
                 <div class="table-container">
                     <table>
                         <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead>
-                        <tbody id="userTableBody"><tr><td colspan="4">Loading data...</td></tr></tbody>
+                        <tbody id="userTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -55,7 +61,7 @@
                 <div class="table-container">
                     <table>
                         <thead><tr><th>Status</th><th>Server Name</th><th>Owner (User ID)</th><th>RAM</th><th>Disk</th><th>CPU</th></tr></thead>
-                        <tbody id="serverTableBody"><tr><td colspan="6">Loading server list...</td></tr></tbody>
+                        <tbody id="serverTableBody"></tbody>
                     </table>
                 </div>
             </div>
