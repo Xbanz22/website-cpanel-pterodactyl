@@ -1,42 +1,64 @@
-export default async function handler(request, response) {
-    // 1. Ambil konfigurasi rahasia dari Environment Variables
-    const { PTERO_DOMAIN, PTERO_ADMIN_API_KEY } = process.env;
-
-    if (!PTERO_DOMAIN || !PTERO_ADMIN_API_KEY) {
-        return response.status(500).json({ message: "Konfigurasi Pterodactyl di Environment Variables belum lengkap." });
+// Mengambil status real-time dari satu server menggunakan Client API
+async function getServerStatus(domain, capikey, identifier) {
+    if (!capikey) return { text: "Unknown", class: "other" };
+    try {
+        const res = await fetch(`${domain}/api/client/servers/${identifier}/resources`, {
+            headers: { 'Authorization': `Bearer ${capikey}`, 'Accept': 'application/json' },
+        });
+        if (!res.ok) return { text: "Unknown", class: "other" };
+        const data = await res.json();
+        const state = data.attributes.current_state;
+        if (state === "running") return { text: "Online", class: "active" };
+        if (state === "offline") return { text: "Offline", class: "suspended" };
+        if (state === "starting") return { text: "Starting", class: "warning" };
+        return { text: state, class: "other" };
+    } catch (e) {
+        return { text: "Unknown", class: "other" };
     }
+}
+
+export default async function handler(request, response) {
+    const { PTERO_DOMAIN, PTERO_ADMIN_API_KEY, PTERO_CLIENT_API_KEY } = process.env;
 
     try {
-        // 2. Minta daftar semua server ke Pterodactyl API
-        // Kita minta 'per_page=1000' untuk mengambil sebanyak mungkin dalam satu panggilan
-        const pteroResponse = await fetch(`${PTERO_DOMAIN}/api/application/servers?per_page=1000`, {
-            headers: {
-                'Authorization': `Bearer ${PTERO_ADMIN_API_KEY}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
+        if (!PTERO_DOMAIN || !PTERO_ADMIN_API_KEY) {
+            throw new Error("Konfigurasi Admin API Pterodactyl belum lengkap.");
+        }
+
+        const page = request.query.page || '1';
+        const pteroResponse = await fetch(`${PTERO_DOMAIN}/api/application/servers?page=${page}&include=user`, {
+            headers: { 'Authorization': `Bearer ${PTERO_ADMIN_API_KEY}`, 'Accept': 'application/json' },
         });
 
         if (!pteroResponse.ok) {
-            throw new Error(`Pterodactyl API merespon dengan status ${pteroResponse.status}`);
+            const errorText = await pteroResponse.text();
+            throw new Error(`Pterodactyl API Error: ${errorText}`);
         }
-
+        
         const data = await pteroResponse.json();
+        const servers = data.data;
 
-        // 3. Proses data dan kirim kembali ke frontend
+        // Ambil status real-time untuk setiap server secara paralel
+        const serversWithStatus = await Promise.all(servers.map(async (srv) => {
+            const attr = srv.attributes;
+            let status;
+            if (attr.suspended) {
+                status = { text: "Suspended", class: "suspended" };
+            } else {
+                status = await getServerStatus(PTERO_DOMAIN, PTERO_CLIENT_API_KEY, attr.identifier);
+            }
+            return {
+                id: attr.id, name: attr.name, user_id: attr.user,
+                ram: attr.limits.memory, disk: attr.limits.disk, cpu: attr.limits.cpu,
+                status: status
+            };
+        }));
+
         return response.status(200).json({
-            totalServers: data.meta.pagination.total,
-            servers: data.data.map(srv => ({ // Ambil hanya data yang kita perlukan
-                name: srv.attributes.name,
-                user_id: srv.attributes.user,
-                ram: srv.attributes.limits.memory,
-                disk: srv.attributes.limits.disk,
-                cpu: srv.attributes.limits.cpu,
-                suspended: srv.attributes.suspended // <-- INI YANG PALING PENTING!
-            }))
+            servers: serversWithStatus,
+            pagination: data.meta.pagination
         });
-
-    } catch (error)
+    } catch (error) {
         console.error("Get All Servers Error:", error);
         return response.status(500).json({ message: error.message });
     }
