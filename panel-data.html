@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Panel Anda</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- Tampilan Loading -->
+        <div id="loading" class="loading-container">
+            <div class="spinner"></div>
+            <p>Sedang membuat server Anda... Mohon tunggu sebentar.</p>
+        </div>
+
+        <!-- Tampilan Data Panel (Awalnya tersembunyi) -->
+        <div id="panelData" class="panel-box" style="display:none;">
+            <h2>Panel Berhasil Dibuat!</h2>
+            <p>Simpan detail login Anda dengan baik.</p>
+            <div class="data-grid">
+                <div class="data-item">
+                    <span>Username</span>
+                    <strong id="dataUsername"></strong>
+                </div>
+                <div class="data-item">
+                    <span>Password</span>
+                    <strong id="dataPassword"></strong>
+                </div>
+                <div class="data-item full-width">
+                    <span>Email</span>
+                    <strong id="dataEmail"></strong>
+                </div>
+                <div class="data-item">
+                    <span>RAM</span>
+                    <strong id="dataRam"></strong>
+                </div>
+                <div class="data-item">
+                    <span>Disk</span>
+                    <strong id="dataDisk"></strong>
+                </div>
+                <div class="data-item">
+                    <span>CPU</span>
+                    <strong id="dataCpu"></strong>
+                </div>
+                <div class="data-item full-width">
+                    <span>Link Login</span>
+                    <a href="#" id="dataLink" target="_blank"></a>
+                </div>
+            </div>
+            <a href="create-panel.html" class="btn-secondary">Buat Panel Lain</a>
+        </div>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>
