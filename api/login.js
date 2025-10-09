@@ -11,22 +11,21 @@ export default async function handler(request, response) {
             return response.status(400).json({ message: 'Username dan password diperlukan.' });
         }
 
-        // Ambil data langsung sebagai objek, tanpa perlu parsing
         const user = await kv.get(`user:${username}`);
-        
-        // Cek jika user tidak ada (null)
         if (!user) {
             return response.status(404).json({ message: 'Username atau password salah.' });
         }
 
-        // Bandingkan password yang diinput dengan hash di database
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        
         if (!isPasswordValid) {
             return response.status(401).json({ message: 'Username atau password salah.' });
         }
         
-        return response.status(200).json({ message: 'Login berhasil!' });
+        // JIKA SUKSES, KIRIM JUGA ROLE-NYA!
+        return response.status(200).json({ 
+            message: 'Login berhasil!',
+            role: user.role || 'free' // Kirim role user
+        });
 
     } catch (error) {
         console.error("Login Error:", error);
