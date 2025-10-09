@@ -57,3 +57,8 @@ tr:hover { background-color: #f9fafb; }
 .role-description li { display: flex; align-items: center; color: var(--text-muted); }
 .role-description .role-badge { margin-right: 8px; }
 select.user-role-select { padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); }
+.table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.pagination { display: flex; align-items: center; gap: 8px; }
+.pagination button { background-color: #eef2ff; color: var(--primary-color); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 500; }
+.pagination button:disabled { background-color: #f1f5f9; color: var(--text-muted); cursor: not-allowed; }
+.pagination span { font-weight: 500; color: var(--text-muted); }
