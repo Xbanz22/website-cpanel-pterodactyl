@@ -1,0 +1,16 @@
+export default async function handler(request, response) {
+    if (request.method !== 'POST') {
+        return response.status(405).json({ message: 'Method Not Allowed' });
+    }
+
+    const { ADMIN_USERNAME, ADMIN_PASSWORD } = process.env;
+    const { username, password } = request.body;
+
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        // Login berhasil
+        return response.status(200).json({ message: 'Login successful' });
+    } else {
+        // Login gagal
+        return response.status(401).json({ message: 'Invalid username or password' });
+    }
+}
