@@ -91,10 +91,11 @@ function handlePanelCreation() {
         e.preventDefault();
         
         const panelRequestData = {
-            username: form.panelUsername.value.toLowerCase().trim(),
-            email: form.email.value.trim(),
-            plan: form.plan.value
-        };
+    panelUsername: form.panelUsername.value.toLowerCase().trim(),
+    email: form.email.value.trim(),
+    plan: form.plan.value,
+    loggedInUser: sessionStorage.getItem('loggedInUser')
+};
         // Simpan data form untuk digunakan di halaman berikutnya
         sessionStorage.setItem('panelRequestData', JSON.stringify(panelRequestData));
         
