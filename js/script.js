@@ -1,50 +1,36 @@
-// Cek di halaman mana kita berada dan jalankan fungsi yang sesuai
-document.addEventListener('DOMContentLoaded', function() {
+
+// Menentukan fungsi mana yang dijalankan berdasarkan halaman
+document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('registerForm')) handleRegister();
     if (document.getElementById('loginForm')) handleLogin();
-    if (document.getElementById('createPanelForm')) handlePanelCreation();
+    if (document.getElementById('createPanelForm')) {
+        handlePanelCreation();
+        initCreatePanelPage(); // PANGGIL FUNGSI BARU UNTUK KUNCI FORM
+    }
     if (document.getElementById('loading')) createPanelAndShowData();
 });
 
-// Fungsi untuk menangani registrasi user
-function handleRegister() {
-    const form = document.getElementById('registerForm');
-    const button = form.querySelector('button');
+// FUNGSI BARU UNTUK MENGATUR HALAMAN PEMBUATAN PANEL
+function initCreatePanelPage() {
+    const userRole = sessionStorage.getItem('userRole');
+    const planSelect = document.getElementById('plan');
 
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        button.disabled = true;
-        button.textContent = 'Mendaftar...';
+    if (userRole === 'free') {
+        planSelect.value = '1gb'; // Set nilainya ke 1GB
+        planSelect.disabled = true; // Kunci dropdown-nya!
 
-        const formData = {
-            username: form.username.value,
-            email: form.email.value,
-            password: form.password.value,
-        };
-
-        try {
-            const response = await fetch('/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
-            });
-
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.message);
-
-            alert(result.message + ' Anda akan diarahkan ke halaman login.');
-            window.location.href = 'login.html';
-
-        } catch (error) {
-            alert('Error: ' + error.message);
-        } finally {
-            button.disabled = false;
-            button.textContent = 'Daftar';
-        }
-    });
+        // Tambahkan pesan kecil di bawah dropdown
+        const infoText = document.createElement('p');
+        infoText.textContent = "Sebagai Free User, Anda hanya bisa membuat panel 1GB.";
+        infoText.style.fontSize = '12px';
+        infoText.style.marginTop = '-10px';
+        infoText.style.textAlign = 'center';
+        infoText.style.color = '#777';
+        planSelect.parentElement.appendChild(infoText);
+    }
 }
 
-// Fungsi untuk menangani login user
+// FUNGSI UNTUK MENANGANI LOGIN (DIPERBARUI)
 function handleLogin() {
     const form = document.getElementById('loginForm');
     const button = form.querySelector('button');
@@ -54,10 +40,7 @@ function handleLogin() {
         button.disabled = true;
         button.textContent = 'Logging In...';
 
-        const formData = {
-            username: form.username.value,
-            password: form.password.value,
-        };
+        const formData = { username: form.username.value, password: form.password.value };
 
         try {
             const response = await fetch('/api/login', {
@@ -70,7 +53,11 @@ function handleLogin() {
             if (!response.ok) throw new Error(result.message);
 
             alert(result.message + ' Anda akan diarahkan ke halaman pembuatan panel.');
+            
+            // SIMPAN USERNAME DAN ROLE
             sessionStorage.setItem('loggedInUser', formData.username);
+            sessionStorage.setItem('userRole', result.role); // <-- SIMPAN ROLE DARI API
+            
             window.location.href = 'create-panel.html';
 
         } catch (error) {
@@ -82,54 +69,59 @@ function handleLogin() {
     });
 }
 
-// Fungsi untuk menangani form pembuatan panel
+// --- FUNGSI LAINNYA (TIDAK BERUBAH) ---
+
+function handleRegister() {
+    const form = document.getElementById('registerForm');
+    const button = form.querySelector('button');
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        button.disabled = true; button.textContent = 'Mendaftar...';
+        const formData = { username: form.username.value, email: form.email.value, password: form.password.value };
+        try {
+            const response = await fetch('/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message);
+            alert(result.message + ' Anda akan diarahkan ke halaman login.');
+            window.location.href = 'login.html';
+        } catch (error) {
+            alert('Error: ' + error.message);
+        } finally {
+            button.disabled = false; button.textContent = 'Daftar';
+        }
+    });
+}
+
 function handlePanelCreation() {
     const form = document.getElementById('createPanelForm');
     if (!form) return;
-
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
         const panelRequestData = {
-    panelUsername: form.panelUsername.value.toLowerCase().trim(),
-    email: form.email.value.trim(),
-    plan: form.plan.value,
-    loggedInUser: sessionStorage.getItem('loggedInUser')
-};
-        // Simpan data form untuk digunakan di halaman berikutnya
+            panelUsername: form.panelUsername.value.toLowerCase().trim(),
+            email: form.email.value.trim(),
+            plan: form.plan.value,
+            loggedInUser: sessionStorage.getItem('loggedInUser')
+        };
         sessionStorage.setItem('panelRequestData', JSON.stringify(panelRequestData));
-        
-        // Pindah ke halaman loading/data
         window.location.href = 'panel-data.html';
     });
 }
 
-// Fungsi untuk memanggil backend dan menampilkan data panel
 function createPanelAndShowData() {
     const loadingDiv = document.getElementById('loading');
     const panelDataDiv = document.getElementById('panelData');
     if (!loadingDiv) return;
-
     const panelRequestData = JSON.parse(sessionStorage.getItem('panelRequestData'));
-
     if (!panelRequestData) {
         loadingDiv.innerHTML = "<p>Data permintaan tidak ditemukan. Silakan kembali.</p>";
         return;
     }
-
-    // Fungsi async untuk berkomunikasi dengan API backend
     async function executePanelCreation() {
         try {
-            const response = await fetch('/api/create-server', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(panelRequestData)
-            });
-            
+            const response = await fetch('/api/create-server', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(panelRequestData) });
             const result = await response.json();
             if (!response.ok) throw new Error(result.message);
-            
-            // Jika sukses, isi data ke elemen HTML
             loadingDiv.style.display = 'none';
             document.getElementById('dataUsername').textContent = result.username;
             document.getElementById('dataPassword').textContent = result.password;
@@ -140,15 +132,10 @@ function createPanelAndShowData() {
             const linkElement = document.getElementById('dataLink');
             linkElement.href = result.domain;
             linkElement.textContent = result.domain;
-            
             panelDataDiv.style.display = 'block';
-
         } catch (error) {
-            // Jika gagal, tampilkan pesan error
             loadingDiv.innerHTML = `<p style="color: red; font-weight: bold;">Terjadi Kesalahan:</p><p>${error.message}</p>`;
         }
     }
-
-    // Jalankan fungsi pembuatan panel
     executePanelCreation();
 }
