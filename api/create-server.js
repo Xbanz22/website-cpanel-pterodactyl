@@ -6,7 +6,6 @@ function normalizeDomain(domain) { if (!domain) throw new Error("Domain tidak bo
 export default async function handler(request, response) {
     if (request.method !== 'POST') return response.status(405).json({ message: 'Method Not Allowed' });
     try {
-        // === BAGIAN YANG DIUBAH ===
         const pteroConfig = await kv.get('config:pterodactyl');
         const PTERO_DOMAIN = pteroConfig?.domain;
         const PTERO_ADMIN_API_KEY = pteroConfig?.adminApiKey;
@@ -15,7 +14,6 @@ export default async function handler(request, response) {
         if (!PTERO_DOMAIN || !PTERO_ADMIN_API_KEY) {
             throw new Error("Konfigurasi Pterodactyl (Domain/Admin API Key) belum diatur di dashboard admin.");
         }
-        // ==========================
         
         const baseUrl = normalizeDomain(PTERO_DOMAIN);
         const apikey = PTERO_ADMIN_API_KEY;
@@ -59,7 +57,22 @@ export default async function handler(request, response) {
         }
         const serverData = await createServerRes.json();
         
-        return response.status(201).json({ domain: baseUrl, username: panelUsername, password: password, email: email, ram: ram === 0 ? "Unlimited" : `${ram / 1024} GB`, disk: disk === 0 ? "Unlimited" : `${disk / 1024} GB`, cpu: cpu === 0 ? "Unlimited" : `${cpu}%`, server_id: serverData.attributes.id, user_id: userId });
+        const panelDetails = {
+            server_id: serverData.attributes.id,
+            server_name: serverName,
+            username: panelUsername,
+            password: password,
+            plan: plan,
+            createdAt: new Date().toISOString()
+        };
+        await kv.lpush(`panels:${loggedInUser}`, panelDetails);
+
+        return response.status(201).json({
+            domain: baseUrl, username: panelUsername, password: password, email: email,
+            ram: ram === 0 ? "Unlimited" : `${ram / 1024} GB`,
+            disk: disk === 0 ? "Unlimited" : `${disk / 1024} GB`,
+            cpu: cpu === 0 ? "Unlimited" : `${cpu}%`,
+        });
 
     } catch (error) {
         console.error("CREATE SERVER ERROR:", error);
