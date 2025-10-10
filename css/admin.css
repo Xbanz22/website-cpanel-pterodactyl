@@ -5,14 +5,15 @@
     --text-light: #f9fafb; --text-dark: #1f2937; --text-muted: #6b7280;
     --primary-color: #4f46e5; --primary-hover: #4338ca;
     --danger-color: #ef4444; --danger-hover: #dc2626;
-    --success-color: #22c55e; --border-color: #e5e7eb;
+    --success-color: #22c55e; --warning-color: #f59e0b;
+    --border-color: #e5e7eb;
     --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 }
 body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--main-bg); color: var(--text-dark); -webkit-font-smoothing: antialiased; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .dashboard-container { display: flex; min-height: 100vh; }
 .sidebar { width: 260px; background-color: var(--sidebar-bg); color: var(--text-light); display: flex; flex-direction: column; }
-.sidebar-header { padding: 24px; font-size: 1.5rem; font-weight: 700; text-align: center; border-bottom: 1px solid #1f2937; letter-spacing: -1px; }
+.sidebar-header { padding: 24px; text-align: center; border-bottom: 1px solid #1f2937; }
 .sidebar-nav { flex-grow: 1; padding-top: 20px; }
 .nav-link { display: flex; align-items: center; gap: 12px; padding: 15px 25px; color: var(--text-muted); text-decoration: none; font-weight: 500; transition: all 0.2s ease; border-left: 3px solid transparent; }
 .nav-link:hover { color: var(--text-light); background-color: #1f2937; }
@@ -37,6 +38,8 @@ tr:hover { background-color: #f9fafb; }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
 .status-active { background-color: var(--success-color); }
 .status-suspended { background-color: var(--danger-color); }
+.status-warning { background-color: var(--warning-color); }
+.status-other { background-color: var(--text-muted); }
 .btn-delete, .btn-save-role, .btn-create { border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
 .btn-delete { background-color: #fee2e2; color: var(--danger-color); }
 .btn-delete:hover { background-color: var(--danger-color); color: white; }
@@ -53,9 +56,6 @@ tr:hover { background-color: #f9fafb; }
 .role-free { background-color: #e0e7ff; color: #4338ca; }
 .role-member { background-color: #dcfce7; color: #166534; }
 .role-admin { background-color: #fee2e2; color: #991b1b; }
-.role-description { display: flex; gap: 20px; list-style: none; padding: 0; margin-top: -10px; margin-bottom: 20px; font-size: 0.9rem; }
-.role-description li { display: flex; align-items: center; color: var(--text-muted); }
-.role-description .role-badge { margin-right: 8px; }
 select.user-role-select { padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); }
 .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .pagination { display: flex; align-items: center; gap: 8px; }
