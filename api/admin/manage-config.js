@@ -1,2 +1,50 @@
-async function updateVercelEnv(key, value) { const { VERCEL_TOKEN, VERCEL_PROJECT_ID, VERCEL_TEAM_ID } = process.env; const API_URL = `https://api.vercel.com/v9/projects/${VERCEL_PROJECT_ID}/env`; const response = await fetch(API_URL + `?teamId=${VERCEL_TEAM_ID || ''}`, { headers: { 'Authorization': `Bearer ${VERCEL_TOKEN}` } }); const { envs } = await response.json(); const existingVar = envs.find(v => v.key === key); if (existingVar) { await fetch(`${API_URL}/${existingVar.id}?teamId=${VERCEL_TEAM_ID || ''}`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${VERCEL_TOKEN}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ value }) }); } else { await fetch(API_URL + `?teamId=${VERCEL_TEAM_ID || ''}`, { method: 'POST', headers: { 'Authorization': `Bearer ${VERCEL_TOKEN}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ key, value, type: 'encrypted', target: ['production', 'preview', 'development'] }) }); } }
-export default async function handler(request, response) { if (!process.env.VERCEL_TOKEN || !process.env.VERCEL_PROJECT_ID) { return response.status(500).json({ message: "Konfigurasi Vercel API Token / Project ID belum diatur." }); } if (request.method === 'POST') { try { const { ptero_domain, ptero_admin_api_key, ptero_client_api_key } = request.body; if (ptero_domain) await updateVercelEnv('PTERO_DOMAIN', ptero_domain); if (ptero_admin_api_key) await updateVercelEnv('PTERO_ADMIN_API_KEY', ptero_admin_api_key); if (ptero_client_api_key) await updateVercelEnv('PTERO_CLIENT_API_KEY', ptero_client_api_key); return response.status(200).json({ message: "Konfigurasi berhasil disimpan. Perubahan akan aktif setelah redeploy." }); } catch (error) { return response.status(500).json({ message: error.message }); } } return response.status(405).end(); }
+import { kv } from '@vercel/kv';
+
+// Kunci unik untuk menyimpan semua konfigurasi di database
+const CONFIG_KEY = 'config:pterodactyl';
+
+export default async function handler(request, response) {
+    // Fitur ini hanya bisa diakses dengan metode POST (menyimpan) dan GET (mengambil)
+    if (request.method === 'POST') {
+        // --- BAGIAN MENYIMPAN KONFIGURASI BARU ---
+        try {
+            const { ptero_domain, ptero_admin_api_key, ptero_client_api_key } = request.body;
+            
+            // 1. Ambil konfigurasi yang sudah ada (jika ada)
+            const existingConfig = await kv.get(CONFIG_KEY) || {};
+
+            // 2. Gabungkan/timpa dengan data baru yang diinput.
+            // Jika input kosong, gunakan nilai yang sudah ada.
+            const newConfig = {
+                domain: ptero_domain || existingConfig.domain,
+                adminApiKey: ptero_admin_api_key || existingConfig.adminApiKey,
+                clientApiKey: ptero_client_api_key || existingConfig.clientApiKey,
+            };
+
+            // 3. Simpan konfigurasi yang sudah diperbarui ke Vercel KV
+            await kv.set(CONFIG_KEY, newConfig);
+
+            return response.status(200).json({ message: "Konfigurasi berhasil disimpan dan langsung aktif!" });
+
+        } catch (error) {
+            console.error("Save Config Error:", error);
+            return response.status(500).json({ message: error.message });
+        }
+    } 
+    else if (request.method === 'GET') {
+        // --- BAGIAN MENGAMBIL KONFIGURASI SAAT INI (UNTUK DITAMPILKAN DI FORM) ---
+        try {
+            const config = await kv.get(CONFIG_KEY);
+            // Kirim kembali hanya domain, jangan pernah mengirim API key ke frontend demi keamanan
+            return response.status(200).json({
+                ptero_domain: config?.domain || ''
+            });
+        } catch (error) {
+            console.error("Get Config Error:", error);
+            return response.status(500).json({ message: error.message });
+        }
+    }
+
+    // Jika metode bukan GET atau POST, tolak permintaan
+    return response.status(405).end();
+}
