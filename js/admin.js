@@ -20,10 +20,7 @@ function handleAdminLogin() {
             const response = await fetch('/api/admin/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username: form.username.value,
-                    password: form.password.value
-                })
+                body: JSON.stringify({ username: form.username.value, password: form.password.value })
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.message);
@@ -49,8 +46,22 @@ function initDashboard() {
     });
     handleCreateAdminForm();
     handleConfigForm();
+    loadCurrentConfig(); // Panggil fungsi baru
     fetchDashboardData();
     fetchAllServersData(currentServerPage);
+}
+
+// FUNGSI BARU UNTUK MEMUAT KONFIGURASI SAAT INI
+async function loadCurrentConfig() {
+    try {
+        const response = await fetch('/api/admin/manage-config'); // Menggunakan metode GET
+        const config = await response.json();
+        if (response.ok) {
+            document.querySelector('#configForm input[name="ptero_domain"]').value = config.ptero_domain || '';
+        }
+    } catch (error) {
+        console.error("Failed to load current config:", error);
+    }
 }
 
 function handleConfigForm() {
@@ -65,7 +76,7 @@ function handleConfigForm() {
             ptero_admin_api_key: form.ptero_admin_api_key.value,
             ptero_client_api_key: form.ptero_client_api_key.value,
         };
-        const payload = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== ''));
+        const payload = Object.fromEntries(Object.entries(data).filter(([_, v]) => v.trim() !== ''));
         try {
             const response = await fetch('/api/admin/manage-config', {
                 method: 'POST',
@@ -74,8 +85,10 @@ function handleConfigForm() {
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.message);
-            alert(result.message + "\nDisarankan untuk melakukan redeploy manual.");
-            form.reset();
+            alert(result.message);
+            // Kosongkan HANYA field password
+            form.ptero_admin_api_key.value = '';
+            form.ptero_client_api_key.value = '';
         } catch (error) {
             alert("Error: " + error.message);
         } finally {
