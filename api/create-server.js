@@ -6,8 +6,16 @@ function normalizeDomain(domain) { if (!domain) throw new Error("Domain tidak bo
 export default async function handler(request, response) {
     if (request.method !== 'POST') return response.status(405).json({ message: 'Method Not Allowed' });
     try {
-        const { PTERO_DOMAIN, PTERO_ADMIN_API_KEY, PTERO_EGG_ID, PTERO_NEST_ID, PTERO_LOCATION_ID } = process.env;
-        if (!PTERO_DOMAIN || !PTERO_ADMIN_API_KEY || !PTERO_EGG_ID || !PTERO_NEST_ID || !PTERO_LOCATION_ID) throw new Error("Konfigurasi panel di Vercel Environment Variables belum lengkap.");
+        // === BAGIAN YANG DIUBAH ===
+        const pteroConfig = await kv.get('config:pterodactyl');
+        const PTERO_DOMAIN = pteroConfig?.domain;
+        const PTERO_ADMIN_API_KEY = pteroConfig?.adminApiKey;
+        const { PTERO_EGG_ID, PTERO_NEST_ID, PTERO_LOCATION_ID } = process.env;
+
+        if (!PTERO_DOMAIN || !PTERO_ADMIN_API_KEY) {
+            throw new Error("Konfigurasi Pterodactyl (Domain/Admin API Key) belum diatur di dashboard admin.");
+        }
+        // ==========================
         
         const baseUrl = normalizeDomain(PTERO_DOMAIN);
         const apikey = PTERO_ADMIN_API_KEY;
