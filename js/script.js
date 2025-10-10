@@ -1,4 +1,3 @@
-// Menentukan fungsi mana yang dijalankan berdasarkan halaman
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('registerForm')) {
         handleRegister();
@@ -10,27 +9,21 @@ document.addEventListener('DOMContentLoaded', () => {
         handlePanelCreation();
         initCreatePanelPage();
     }
-    // Tidak ada lagi fungsi untuk panel-data.html di sini, karena JS-nya inline
 });
 
-/**
- * Menampilkan informasi user (username, role, tombol logout) di header.
- */
 function displayUserInfo() {
     const header = document.getElementById('userHeader');
     const usernameEl = document.getElementById('headerUsername');
     const roleEl = document.getElementById('headerRole');
     const logoutBtn = document.getElementById('logoutButton');
-    
     const loggedInUser = sessionStorage.getItem('loggedInUser');
     const userRole = sessionStorage.getItem('userRole');
 
     if (loggedInUser && userRole && header) {
         usernameEl.textContent = loggedInUser;
         roleEl.textContent = userRole;
-        roleEl.className = `role-badge role-${userRole}`; // Terapkan class untuk styling
+        roleEl.className = `role-badge role-${userRole}`;
         header.style.display = 'flex';
-
         logoutBtn.addEventListener('click', () => {
             sessionStorage.clear();
             window.location.href = 'login.html';
@@ -38,11 +31,8 @@ function displayUserInfo() {
     }
 }
 
-/**
- * Mengatur halaman pembuatan panel, seperti mengunci pilihan paket untuk free user.
- */
 function initCreatePanelPage() {
-    displayUserInfo(); // Tampilkan header user
+    displayUserInfo();
     const userRole = sessionStorage.getItem('userRole');
     const planSelect = document.getElementById('plan');
     const planInfo = document.getElementById('planInfo');
@@ -55,11 +45,12 @@ function initCreatePanelPage() {
         planSelect.disabled = false;
         planInfo.textContent = "";
     }
+
+    if (userRole === 'admin') {
+        document.getElementById('adminOptions').style.display = 'flex';
+    }
 }
 
-/**
- * Menangani form login user, termasuk menyimpan role.
- */
 function handleLogin() {
     const form = document.getElementById('loginForm');
     const button = form.querySelector('button');
@@ -79,10 +70,9 @@ function handleLogin() {
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.message);
-
             alert(result.message + ' Anda akan diarahkan ke halaman pembuatan panel.');
             sessionStorage.setItem('loggedInUser', formData.username);
-            sessionStorage.setItem('userRole', result.role); // Simpan role dari API
+            sessionStorage.setItem('userRole', result.role);
             window.location.href = 'create-panel.html';
         } catch (error) {
             alert('Error: ' + error.message);
@@ -93,9 +83,6 @@ function handleLogin() {
     });
 }
 
-/**
- * Menangani form registrasi user.
- */
 function handleRegister() {
     const form = document.getElementById('registerForm');
     const button = form.querySelector('button');
@@ -127,18 +114,17 @@ function handleRegister() {
     });
 }
 
-/**
- * Menangani form pembuatan panel.
- */
 function handlePanelCreation() {
     const form = document.getElementById('createPanelForm');
     if (!form) return;
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+        const isAdminPanelCheckbox = form.querySelector('#isAdminPanel');
         const panelRequestData = {
             panelUsername: form.panelUsername.value.toLowerCase().trim(),
             email: form.email.value.trim(),
             plan: form.plan.value,
+            isAdminPanel: isAdminPanelCheckbox ? isAdminPanelCheckbox.checked : false,
             loggedInUser: sessionStorage.getItem('loggedInUser')
         };
         sessionStorage.setItem('panelRequestData', JSON.stringify(panelRequestData));
