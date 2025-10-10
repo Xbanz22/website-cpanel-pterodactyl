@@ -1,56 +1,34 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Panel Baru</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Buat Panel Baru</title><link rel="stylesheet" href="css/style.css"></head>
 <body>
+    <video autoplay muted loop class="video-background"><source src="videos/VID-20250921-WA0123.mp4" type="video/mp4"></video>
     <div class="main-container">
-        <!-- HEADER PENGGUNA BARU (AKAN MUNCUL SETELAH LOGIN) -->
         <header class="user-header" style="display: none;" id="userHeader">
-            <div class="user-info">
-                <p class="username" id="headerUsername">...</p>
-                <span class="role-badge" id="headerRole">...</span>
-            </div>
+            <div class="user-info"><p class="username" id="headerUsername">...</p><span class="role-badge" id="headerRole">...</span></div>
             <button class="btn-logout" id="logoutButton">Logout</button>
         </header>
-
         <div class="panel-box">
-            <h2>Buat Panel Pterodactyl</h2>
-            <p>Isi detail di bawah ini untuk membuat server baru.</p>
+            <div class="logo-container"><img src="images/IMG-20251007-WA0077.jpg" alt="Logo"></div>
+            <h2>Buat Panel Pterodactyl</h2><p>Isi detail di bawah ini untuk membuat server baru.</p>
             <form id="createPanelForm">
-                <div class="input-group">
-                    <label for="panelUsername">Username Panel</label>
-                    <input type="text" id="panelUsername" name="panelUsername" required>
-                </div>
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
+                <div class="input-group"><label for="panelUsername">Username Panel</label><input type="text" id="panelUsername" name="panelUsername" required></div>
+                <div class="input-group"><label for="email">Email</label><input type="email" id="email" name="email" required></div>
                 <div class="input-group">
                     <label for="plan">Pilih Paket</label>
                     <select id="plan" name="plan">
-                        <option value="1gb">1 GB RAM</option>
-                        <option value="2gb">2 GB RAM</option>
-                        <option value="3gb">3 GB RAM</option>
-                        <option value="4gb">4 GB RAM</option>
-                        <option value="5gb">5 GB RAM</option>
-                        <option value="6gb">6 GB RAM</option>
-                        <option value="7gb">7 GB RAM</option>
-                        <option value="8gb">8 GB RAM</option>
-                        <option value="9gb">9 GB RAM</option>
-                        <option value="10gb">10 GB RAM</option>
-                        <option value="unli">Unlimited</option>
+                        <option value="1gb">1 GB RAM</option><option value="2gb">2 GB RAM</option><option value="3gb">3 GB RAM</option>
+                        <option value="4gb">4 GB RAM</option><option value="5gb">5 GB RAM</option><option value="6gb">6 GB RAM</option>
+                        <option value="7gb">7 GB RAM</option><option value="8gb">8 GB RAM</option><option value="9gb">9 GB RAM</option>
+                        <option value="10gb">10 GB RAM</option><option value="unli">Unlimited</option>
                     </select>
-                    <!-- ELEMEN BARU UNTUK PESAN INFO -->
                     <small id="planInfo" class="plan-info-text"></small>
+                </div>
+                <div class="input-group" id="adminOptions" style="display: none; align-items: center;">
+                    <input type="checkbox" id="isAdminPanel" name="isAdminPanel"><label for="isAdminPanel">Create as Pterodactyl Admin</label>
                 </div>
                 <button type="submit" class="btn-primary">Buat Panel Sekarang</button>
             </form>
         </div>
     </div>
     <script src="js/script.js"></script>
-</body>
-</html>
+</body></html>
