@@ -21,18 +21,27 @@
         <div class="panel-box">
             <h2 id="detailServerName" style="margin-bottom: 5px;">Loading...</h2>
             <p id="detailDomainPanel" style="margin-bottom: 30px; font-weight: 500;">...</p>
-
             <div id="detailsGrid">
                 <!-- Kredensial Login -->
                 <div class="data-item full-width">
                     <span>Username</span>
-                    <strong id="detailUsername">...</strong>
-                    <button class="copy-button" data-copy-target="detailUsername"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M7 3.5A1.5 1.5 0 0 1 8.5 2h3.879a1.5 1.5 0 0 1 1.06.44l3.122 3.121A1.5 1.5 0 0 1 17 6.621V16.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 6 16.5v-3a.75.75 0 0 1 1.5 0v3a.75.75 0 0 0 .75.75h8a.75.75 0 0 0 .75-.75V6.621a.75.75 0 0 0-.22-.53l-3.121-3.122A.75.75 0 0 0 12.379 2.75H8.5a.75.75 0 0 0-.75.75v.75a.75.75 0 0 1-1.5 0V3.5Z"/><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h8a.75.75 0 0 1 0 1.5h-8A1.5 1.5 0 0 1 3 5.5Z"/></svg></button>
+                    <div>
+                        <strong id="detailUsername">...</strong>
+                        <button class="copy-button" data-copy-target="detailUsername">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M7 3.5A1.5 1.5 0 0 1 8.5 2h3.879a1.5 1.5 0 0 1 1.06.44l3.122 3.121A1.5 1.5 0 0 1 17 6.621V16.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 6 16.5v-3a.75.75 0 0 1 1.5 0v3a.75.75 0 0 0 .75.75h8a.75.75 0 0 0 .75-.75V6.621a.75.75 0 0 0-.22-.53l-3.121-3.122A.75.75 0 0 0 12.379 2.75H8.5a.75.75 0 0 0-.75.75v.75a.75.75 0 0 1-1.5 0V3.5Z"/><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h8a.75.75 0 0 1 0 1.5h-8A1.5 1.5 0 0 1 3 5.5Z"/></svg>
+                            Copy
+                        </button>
+                    </div>
                 </div>
                 <div class="data-item full-width">
                     <span>Password</span>
-                    <strong id="detailPassword">...</strong>
-                    <button class="copy-button" data-copy-target="detailPassword"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M7 3.5A1.5 1.5 0 0 1 8.5 2h3.879a1.5 1.5 0 0 1 1.06.44l3.122 3.121A1.5 1.5 0 0 1 17 6.621V16.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 6 16.5v-3a.75.75 0 0 1 1.5 0v3a.75.75 0 0 0 .75.75h8a.75.75 0 0 0 .75-.75V6.621a.75.75 0 0 0-.22-.53l-3.121-3.122A.75.75 0 0 0 12.379 2.75H8.5a.75.75 0 0 0-.75.75v.75a.75.75 0 0 1-1.5 0V3.5Z"/><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h8a.75.75 0 0 1 0 1.5h-8A1.5 1.5 0 0 1 3 5.5Z"/></svg></button>
+                    <div>
+                        <strong id="detailPassword">...</strong>
+                        <button class="copy-button" data-copy-target="detailPassword">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M7 3.5A1.5 1.5 0 0 1 8.5 2h3.879a1.5 1.5 0 0 1 1.06.44l3.122 3.121A1.5 1.5 0 0 1 17 6.621V16.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 6 16.5v-3a.75.75 0 0 1 1.5 0v3a.75.75 0 0 0 .75.75h8a.75.75 0 0 0 .75-.75V6.621a.75.75 0 0 0-.22-.53l-3.121-3.122A.75.75 0 0 0 12.379 2.75H8.5a.75.75 0 0 0-.75.75v.75a.75.75 0 0 1-1.5 0V3.5Z"/><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h8a.75.75 0 0 1 0 1.5h-8A1.5 1.5 0 0 1 3 5.5Z"/></svg>
+                            Copy
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Spesifikasi & Info -->
@@ -40,13 +49,10 @@
                 <div class="data-item"><span>Plan</span><strong id="detailPlan">...</strong></div>
                 <div class="data-item"><span>Tanggal Dibuat</span><strong id="detailCreatedDate">...</strong></div>
                 <div class="data-item"><span>Tanggal Expired</span><strong>-</strong></div>
-                
-                <div class="data-item full-width">
-                    <span>Catatan Penting</span>
-                    <p style="margin: 0; font-size: 0.9rem;">Simpan data login ini baik-baik dan jangan bagikan ke orang lain.</p>
-                </div>
+                <div class="data-item full-width"><span>Catatan Penting</span><p style="margin: 0; font-size: 0.9rem;">Simpan data login ini baik-baik dan jangan bagikan ke orang lain.</p></div>
             </div>
             <a href="my-panels.html" class="btn-secondary" style="background: rgba(238, 242, 255, 0.8);">Kembali ke Riwayat</a>
+            <button id="deletePanelButton" class="btn-logout" style="margin-left: 10px;">Hapus Panel Ini</button>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
