@@ -11,7 +11,7 @@ function handleAdminLogin() {
         e.preventDefault();
         const button = form.querySelector('button'); button.textContent = 'Logging in...'; button.disabled = true;
         try {
-            const response = awa fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: form.username.value, password: form.password.value }) });
+            const response = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: form.username.value, password: form.password.value }) });
             const result = await response.json(); if (!response.ok) throw new Error(result.message);
             sessionStorage.setItem('isAdminLoggedIn', 'true');
             window.location.href = '/admin/index.html';
