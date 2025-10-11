@@ -1,4 +1,4 @@
-import { kv } from '@vercel/kv';
+import { kv } from '@vercel/kv'; 
 
 async function getServerStatus(domain, capikey, identifier) {
     if (!capikey) return { text: "Unknown", class: "other" };
