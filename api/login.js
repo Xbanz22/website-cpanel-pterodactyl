@@ -1,4 +1,4 @@
-import { kv } from '@vercel/kv';
+import { kv } from '@vercel/kv'; 
 import bcrypt from 'bcryptjs';
 
 export default async function handler(request, response) {
