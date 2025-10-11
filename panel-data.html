@@ -20,4 +20,4 @@
         </div>
     </div>
     <script>document.addEventListener('DOMContentLoaded',()=>{const e=document.getElementById("loading"),t=document.getElementById("panelData"),n=JSON.parse(sessionStorage.getItem("panelRequestData"));if(!n)return void(e.innerHTML="<p>Data permintaan tidak ditemukan. Silakan kembali.</p>");async function a(){try{const n=await fetch("/api/create-server",{method:"POST",headers:{"Content-Type":"application/json"},body:sessionStorage.getItem("panelRequestData")}),o=await n.json();if(!n.ok)throw new Error(o.message);e.style.display="none",document.getElementById("dataUsername").textContent=o.username,document.getElementById("dataPassword").textContent=o.password,document.getElementById("dataEmail").textContent=o.email,document.getElementById("dataRam").textContent=o.ram,document.getElementById("dataDisk").textContent=o.disk,document.getElementById("dataCpu").textContent=o.cpu;const d=document.getElementById("dataLink");d.href=o.domain,d.textContent=o.domain,t.style.display="block"}catch(t){e.innerHTML=`<p style="color: red; font-weight: bold;">Terjadi Kesalahan:</p><p>${t.message}</p>`}}a()});</script>
-</body></html>
+</body></html> 
