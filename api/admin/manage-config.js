@@ -1,4 +1,4 @@
-import { kv } from '@vercel/kv';
+import { kv } from '@vercel/kv'; 
 
 // Kunci unik untuk menyimpan semua konfigurasi di database
 const CONFIG_KEY = 'config:pterodactyl';
