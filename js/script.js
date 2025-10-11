@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => { 
     if (document.getElementById('registerForm')) handleRegister();
     if (document.getElementById('loginForm')) handleLogin();
     if (document.getElementById('createPanelForm')) {
