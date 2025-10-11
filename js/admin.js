@@ -1,4 +1,4 @@
-let currentServerPage = 1;
+let currentServerPage = 1; 
 
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('adminLoginForm')) handleAdminLogin();
