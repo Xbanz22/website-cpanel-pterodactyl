@@ -61,17 +61,35 @@ async function initPanelDetailsPage() {
         const panel = panels[panelIndex];
         if (!panel) throw new Error("Panel tidak valid.");
 
+        // Ambil domain dari konfigurasi (kita butuh API baru untuk ini)
+        // Untuk sekarang, kita ambil dari localStorage atau set default
+        const pteroConfigResponse = await fetch('/api/admin/manage-config'); // Menggunakan GET
+        const pteroConfig = await pteroConfigResponse.json();
+        const domainPanel = pteroConfig.ptero_domain || "Link tidak tersedia";
+
+        // Tampilkan semua data lengkap ke elemen baru
         document.getElementById('detailServerName').textContent = panel.server_name;
-        const detailsGrid = document.getElementById('detailsGrid');
-        detailsGrid.innerHTML = `
-            <div class="data-item"><span>Server ID</span><strong>${panel.server_id}</strong></div>
-            <div class="data-item"><span>Plan</span><strong>${panel.plan.toUpperCase()}</strong></div>
-            <div class="data-item full-width"><span>Username</span><strong>${panel.username}</strong></div>
-            <div class="data-item full-width"><span>Password</span><strong>${panel.password}</strong></div>
-            <div class="data-item"><span>Tanggal Dibuat</span><strong>${new Date(panel.createdAt).toLocaleString('id-ID')}</strong></div>
-            <div class="data-item"><span>Tanggal Expired</span><strong>-</strong></div>
-            <div class="data-item full-width"><span>Catatan Penting</span><p style="margin: 0; font-size: 0.9rem;">Simpan data login ini baik-baik dan jangan bagikan ke orang lain.</p></div>
-        `;
+        document.getElementById('detailDomainPanel').innerHTML = `<a href="${domainPanel}" target="_blank" style="color: var(--primary-color);">${domainPanel}</a>`;
+        document.getElementById('detailServerId').textContent = panel.server_id;
+        document.getElementById('detailPlan').textContent = panel.plan.toUpperCase();
+        document.getElementById('detailUsername').textContent = panel.username;
+        document.getElementById('detailPassword').textContent = panel.password;
+        document.getElementById('detailCreatedDate').textContent = new Date(panel.createdAt).toLocaleString('id-ID');
+        
+        // Tambahkan fungsi untuk tombol copy
+        document.querySelectorAll('.copy-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const targetId = e.currentTarget.dataset.copyTarget;
+                const textToCopy = document.getElementById(targetId).textContent;
+                
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    iziToast.success({ title: 'Copied!', message: 'Berhasil disalin ke clipboard.', position: 'topRight', timeout: 2000 });
+                }).catch(err => {
+                    iziToast.error({ title: 'Failed', message: 'Gagal menyalin.', position: 'topRight' });
+                });
+            });
+        });
+
     } catch (error) {
         iziToast.error({ title: 'Error', message: `Gagal memuat detail panel: ${error.message}`, position: 'topRight' });
     }
