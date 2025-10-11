@@ -1,4 +1,4 @@
-import { kv } from '@vercel/kv';
+import { kv } from '@vercel/kv'; 
 
 function capital(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
 function normalizeDomain(domain) { if (!domain) throw new Error("Domain tidak boleh kosong"); domain = domain.replace(/\/$/, ""); if (!/^https?:\/\//i.test(domain)) { domain = "https://" + domain; } return domain; }
