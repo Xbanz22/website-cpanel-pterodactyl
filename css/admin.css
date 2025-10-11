@@ -207,11 +207,29 @@ tr:hover {
 .btn-delete:hover { background-color: var(--danger-color); color: white; }
 .btn-save-role { background-color: #dcfce7; color: var(--success-color); margin-left: 10px; }
 .btn-save-role:hover { background-color: var(--success-color); color: white; }
-.btn-action { margin-right: 5px; }
-.btn-suspend { background-color: #fef2f2; color: #b91c1c; }
-.btn-suspend:hover { background-color: #ef4444; color: white; }
-.btn-unsuspend { background-color: #f0fdf4; color: #166534; }
-.btn-unsuspend:hover { background-color: #22c55e; color: white; }
+
+/* Style untuk tombol Aksi (Suspend/Unsuspend) */
+.btn-action {
+    margin-right: 5px;
+}
+.btn-suspend {
+    background-color: #fef2f2;
+    color: #b91c1c;
+}
+.btn-suspend:hover {
+    background-color: #ef4444;
+    color: white;
+}
+.btn-unsuspend {
+    background-color: #f0fdf4;
+    color: #166534;
+}
+.btn-unsuspend:hover {
+    background-color: #22c55e;
+    color: white;
+}
+/* =========================================== */
+
 
 .inline-form {
     display: grid;
