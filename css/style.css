@@ -333,11 +333,11 @@ p {
     cursor: pointer;
     padding: 0 5px;
     opacity: 0.6;
-    transition: opacity 0.2s;
+    transition: opacity 0.5s;
     vertical-align: middle;
 }
 .copy-button:hover {
-    opacity: 1;
+    opacity: 2;
 }
 .copy-button svg {
     width: 16px;
