@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Detail Panel</title><link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css"></head>
+<body>
+    <video autoplay muted loop class="video-background"><source src="videos/VID-20250921-WA0123.mp4" type="video/mp4"></video>
+    <div class="main-container">
+        <header class="user-header" style="display: none;" id="userHeader">
+            <div class="user-info"><p class="username" id="headerUsername">...</p><span class="role-badge" id="headerRole">...</span></div>
+            <div><a href="my-panels.html" class="btn-secondary" style="margin-right: 10px;">Panel Saya</a><button class="btn-logout" id="logoutButton">Logout</button></div>
+        </header>
+
+        <div class="panel-box">
+            <h2 id="detailServerName">Loading...</h2>
+            <p>Berikut adalah detail lengkap untuk panel Anda.</p>
+            <div class="data-grid" id="detailsGrid">
+                <!-- Detail akan diisi oleh JavaScript -->
+            </div>
+            <a href="my-panels.html" class="btn-secondary">Kembali ke Riwayat</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
