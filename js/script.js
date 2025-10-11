@@ -1,16 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('registerForm')) handleRegister();
     if (document.getElementById('loginForm')) handleLogin();
-    if (document.getElementById('createPanelForm')) {
-        handlePanelCreation();
-        initCreatePanelPage();
-    }
-    if (document.getElementById('panelListContainer')) {
-        initMyPanelsPage();
-    }
-    if (document.getElementById('detailsGrid')) {
-        initPanelDetailsPage();
-    }
+    if (document.getElementById('createPanelForm')) initCreatePanelPage();
+    if (document.getElementById('panelListContainer')) initMyPanelsPage();
+    if (document.getElementById('detailsGrid')) initPanelDetailsPage();
 });
 
 async function initMyPanelsPage() {
@@ -36,6 +29,7 @@ async function initMyPanelsPage() {
             panelList.appendChild(listItem);
         });
         container.appendChild(panelList);
+
     } catch (error) {
         container.innerHTML = `<p style="color:red; text-align:center;">Error: ${error.message}</p>`;
     }
@@ -61,13 +55,10 @@ async function initPanelDetailsPage() {
         const panel = panels[panelIndex];
         if (!panel) throw new Error("Panel tidak valid.");
 
-        // Ambil domain dari konfigurasi (kita butuh API baru untuk ini)
-        // Untuk sekarang, kita ambil dari localStorage atau set default
-        const pteroConfigResponse = await fetch('/api/admin/manage-config'); // Menggunakan GET
+        const pteroConfigResponse = await fetch('/api/admin/manage-config');
         const pteroConfig = await pteroConfigResponse.json();
         const domainPanel = pteroConfig.ptero_domain || "Link tidak tersedia";
 
-        // Tampilkan semua data lengkap ke elemen baru
         document.getElementById('detailServerName').textContent = panel.server_name;
         document.getElementById('detailDomainPanel').innerHTML = `<a href="${domainPanel}" target="_blank" style="color: var(--primary-color);">${domainPanel}</a>`;
         document.getElementById('detailServerId').textContent = panel.server_id;
@@ -76,18 +67,35 @@ async function initPanelDetailsPage() {
         document.getElementById('detailPassword').textContent = panel.password;
         document.getElementById('detailCreatedDate').textContent = new Date(panel.createdAt).toLocaleString('id-ID');
         
-        // Tambahkan fungsi untuk tombol copy
         document.querySelectorAll('.copy-button').forEach(button => {
             button.addEventListener('click', (e) => {
                 const targetId = e.currentTarget.dataset.copyTarget;
                 const textToCopy = document.getElementById(targetId).textContent;
-                
                 navigator.clipboard.writeText(textToCopy).then(() => {
-                    iziToast.success({ title: 'Copied!', message: 'Berhasil disalin ke clipboard.', position: 'topRight', timeout: 2000 });
-                }).catch(err => {
-                    iziToast.error({ title: 'Failed', message: 'Gagal menyalin.', position: 'topRight' });
+                    iziToast.success({ title: 'Copied!', message: 'Berhasil disalin.', position: 'topRight', timeout: 2000 });
                 });
             });
+        });
+
+        const deleteButton = document.getElementById('deletePanelButton');
+        deleteButton.addEventListener('click', async () => {
+            if (!confirm(`Anda yakin ingin menghapus "${panel.server_name}" secara permanen? Aksi ini tidak dapat dibatalkan.`)) return;
+            deleteButton.textContent = 'Menghapus...';
+            deleteButton.disabled = true;
+            try {
+                const deleteResponse = await fetch('/api/admin/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'user-delete-panel', loggedInUser: loggedInUser, serverId: panel.server_id, panelIndex: panelIndex })
+                });
+                const result = await deleteResponse.json();
+                if (!deleteResponse.ok) throw new Error(result.message);
+                iziToast.success({ title: 'Berhasil', message: result.message, position: 'topRight', onClosed: () => { window.location.href = 'my-panels.html'; } });
+            } catch (error) {
+                iziToast.error({ title: 'Error', message: error.message, position: 'topRight' });
+                deleteButton.textContent = 'Hapus Panel Ini';
+                deleteButton.disabled = false;
+            }
         });
 
     } catch (error) {
@@ -133,40 +141,19 @@ function initCreatePanelPage() {
 
 function handleLogin() {
     const form = document.getElementById('loginForm');
-    const button = form.querySelector('button');
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        button.disabled = true;
-        button.textContent = 'Logging In...';
-        const formData = {
-            username: form.username.value,
-            password: form.password.value
-        };
+        const button = form.querySelector('button'); button.disabled = true; button.textContent = 'Logging In...';
+        const formData = { username: form.username.value, password: form.password.value };
         try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.message);
-
+            const response = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+            const result = await response.json(); if (!response.ok) throw new Error(result.message);
             sessionStorage.setItem('loggedInUser', formData.username);
             sessionStorage.setItem('userRole', result.role);
-            
-            iziToast.success({
-                title: 'Success',
-                message: result.message,
-                position: 'topRight',
-                timeout: 1500,
-                onClosed: function () {
-                    window.location.href = 'create-panel.html';
-                }
-            });
+            iziToast.success({ title: 'Success', message: result.message, position: 'topRight', timeout: 1500, onClosed: function () { window.location.href = 'create-panel.html'; } });
         } catch (error) {
             iziToast.error({ title: 'Error', message: error.message, position: 'topRight' });
-            button.disabled = false;
-            button.textContent = 'Login';
+            button.disabled = false; button.textContent = 'Login';
         }
     });
 }
@@ -175,36 +162,15 @@ function handleRegister() {
     const form = document.getElementById('registerForm');
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        const button = form.querySelector('button');
-        button.disabled = true;
-        button.textContent = 'Mendaftar...';
-        const formData = {
-            username: form.username.value,
-            email: form.email.value,
-            password: form.password.value
-        };
+        const button = form.querySelector('button'); button.disabled = true; button.textContent = 'Mendaftar...';
+        const formData = { username: form.username.value, email: form.email.value, password: form.password.value };
         try {
-            const response = await fetch('/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.message);
-            
-            iziToast.success({
-                title: 'Success',
-                message: result.message,
-                position: 'topRight',
-                timeout: 1500,
-                onClosed: function() {
-                    window.location.href = 'login.html';
-                }
-            });
+            const response = await fetch('/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+            const result = await response.json(); if (!response.ok) throw new Error(result.message);
+            iziToast.success({ title: 'Success', message: result.message, position: 'topRight', timeout: 1500, onClosed: function() { window.location.href = 'login.html'; } });
         } catch (error) {
             iziToast.error({ title: 'Error', message: error.message, position: 'topRight' });
-            button.disabled = false;
-            button.textContent = 'Daftar';
+            button.disabled = false; button.textContent = 'Daftar';
         }
     });
 }
