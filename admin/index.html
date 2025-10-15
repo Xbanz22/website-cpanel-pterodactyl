@@ -1,55 +1,59 @@
 <!DOCTYPE html>
-<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Admin Dashboard</title><link rel="stylesheet" href="../css/admin.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">    <link rel="stylesheet" href="website-cpanel-pterodactyl-main/css/admin.css">
+<html lang="id">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title><link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
 </head>
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="sidebar-header"><img src="../images/IMG-20251007-WA0077.jpg" alt="Logo" style="max-width: 100px; border-radius: 8px;"></div>
-            <nav class="sidebar-nav">
-                <a href="#" class="nav-link active"><svg><!-- icon --></svg> Dashboard</a>
-                <a href="#" id="logoutButton" class="nav-link logout"><svg><!-- icon --></svg> Logout</a>
+            <div class="brand">
+                <div class="logo"><img src="../images/IMG-20251007-WA0077.jpg" alt="Logo"></div>
+                <span class="title">PanelAdmin</span>
+            </div>
+            <nav class="nav">
+                <a href="#" class="active"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 1.085-1.085-1.085m1.085 1.085L9.75 18l-2.25-2.25m7.5 0h3.75a2.25 2.25 0 002.25-2.25V3m-3.75 13.5l-1.085-1.085m1.085 1.085l-2.25 2.25-2.25-2.25m11.25-13.5l-2.25 2.25-2.25-2.25"/></svg>Dashboard</a>
+                <a href="#" id="logoutButton" class="logout"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>Logout</a>
             </nav>
         </aside>
         <main class="main-content">
-            <header class="main-header"><h1>Dashboard</h1></header>
-            <div class="stats-grid">
-                <div class="stat-card"><h4>Total Users</h4><p id="totalUsers">...</p></div>
-                <div class="stat-card"><h4>Total Servers</h4><p id="totalServers">...</p></div>
-                <div class="stat-card"><h4>Admins</h4><p id="totalAdmins">...</p></div> 
+            <div class="header"><div class="left"><h1>Dashboard</h1></div></div>
+            <div class="grid">
+                <div class="card"><div class="k">Total Users</div><div class="v" id="totalUsers">...</div></div>
+                <div class="card"><div class="k">Total Servers</div><div class="v" id="totalServers">...</div></div>
+                <div class="card"><div class="k">Admins</div><div class="v" id="totalAdmins">...</div></div>
             </div>
-            <div class="content-block">
+            <div class="panel">
                 <h2>Pterodactyl Configuration</h2>
-                <form id="configForm" class="inline-form">
-                    <div><label>Pterodactyl Domain</label><input type="text" name="ptero_domain" placeholder="https://panel.domain.com"></div>
-                    <div><label>Admin API Key (ptla_)</label><input type="password" name="ptero_admin_api_key" placeholder="Tidak berubah jika kosong"></div>
-                    <div><label>Client API Key (ptlc_)</label><input type="password" name="ptero_client_api_key" placeholder="Tidak berubah jika kosong"></div>
-                    <button type="submit" class="btn-create">Save Config</button>
+                <form id="configForm" class="form-grid">
+                    <div><label>Pterodactyl Domain</label><input type="text" name="ptero_domain" class="input"></div>
+                    <div><label>Admin API Key (ptla_)</label><input type="password" name="ptero_admin_api_key" class="input" placeholder="Tidak berubah jika kosong"></div>
+                    <div><label>Client API Key (ptlc_)</label><input type="password" name="ptero_client_api_key" class="input" placeholder="Tidak berubah jika kosong"></div>
+                    <button type="submit" class="btn btn-primary">Save Config</button>
                 </form>
             </div>
-            <div class="content-block">
+            <div class="panel">
                 <h2>Create New Admin</h2>
-                <form id="createAdminForm" class="inline-form">
-                    <div><label>Username</label><input type="text" name="username" required></div>
-                    <div><label>Email</label><input type="email" name="email" required></div>
-                    <div><label>Password</label><input type="password" name="password" required></div>
-                    <button type="submit" class="btn-create">Create Admin</button>
+                <form id="createAdminForm" class="form-grid">
+                    <div><label>Username</label><input type="text" name="username" class="input" required></div>
+                    <div><label>Email</label><input type="email" name="email" class="input" required></div>
+                    <div><label>Password</label><input type="password" name="password" class="input" required></div>
+                    <button type="submit" class="btn btn-primary">Create Admin</button>
                 </form>
             </div>
-            <div class="content-block">
-                <h2>Manage Website Users</h2>
-                <div class="table-container">
+            <div class="panel">
+                <div class="table-header"><h2>Manage Website Users</h2></div>
+                <div class="table-wrap">
                     <table>
                         <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead>
                         <tbody id="userTableBody"></tbody>
                     </table>
                 </div>
             </div>
-            <div class="content-block">
-                <div class="table-header">
-                    <h2>All Pterodactyl Servers</h2>
-                    <div class="pagination" id="serverPagination"></div>
-                </div>
-                <div class="table-container">
+            <div class="panel">
+                <div class="table-header"><h2>All Pterodactyl Servers</h2><div class="pagination" id="serverPagination"></div></div>
+                <div class="table-wrap">
                     <table>
                         <thead><tr><th>Status</th><th>Server Name</th><th>Owner (ID)</th><th>RAM</th><th>Disk</th><th>CPU</th><th>Actions</th></tr></thead>
                         <tbody id="serverTableBody"></tbody>
@@ -60,4 +64,5 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
     <script src="../js/admin.js"></script>
-</body></html>
+</body>
+</html>
